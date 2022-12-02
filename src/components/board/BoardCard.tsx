@@ -22,4 +22,4 @@ const BoardCard: React.FC<BoardCardProps> = ({card, boardType}) => {
     );
 };
 
-export default BoardCard;
+export default React.memo(BoardCard);
