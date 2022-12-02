@@ -42,15 +42,20 @@ const boardSlice = createSlice({
             action: PayloadAction<{boardDestination: BoardTypeEnum, dragItem: BoardCardDragInterface}>
         ) => {
             const {boardDestination: boardDestinationType, dragItem} = action.payload;
-
-            if (boardDestinationType === dragItem.boardType) return;
-
             const boardDestination = state.boards.find(b => b.type === boardDestinationType)!;
-            const boardDragItem = state.boards.find(b => b.type === dragItem.boardType)!;
-            const cardIndex = boardDragItem.cards.findIndex(card => card.id === dragItem.id);
 
-            boardDestination.cards.push(boardDragItem.cards[cardIndex]);
-            boardDragItem.cards.splice(cardIndex, 1);
+            if (boardDestinationType === dragItem.boardType) {
+                const cardIndex = boardDestination.cards.findIndex(card => card.id === dragItem.id);
+                const dragCard = boardDestination.cards.splice(cardIndex, 1)[0];
+
+                boardDestination.cards.push(dragCard);
+            } else {
+                const boardDragItem = state.boards.find(b => b.type === dragItem.boardType)!;
+                const cardIndex = boardDragItem.cards.findIndex(card => card.id === dragItem.id);
+
+                boardDestination.cards.push(boardDragItem.cards[cardIndex]);
+                boardDragItem.cards.splice(cardIndex, 1);
+            }
         }
     }
 });

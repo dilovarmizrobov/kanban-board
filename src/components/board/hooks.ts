@@ -5,20 +5,17 @@ import {useRef} from "react";
 import {useAppDispatch} from "../../app/hooks";
 import {dropCardToBoard, moveCardBetweenBoards} from "../../app/reducers/boardSlice";
 
-export const useDragAndDropBoardCard = (dragItem: BoardCardDragInterface) => {
+export const useDragAndDropBoardCard = (item: BoardCardDragInterface) => {
     const dispatch = useAppDispatch();
     const ref = useRef<HTMLDivElement>(null);
-    const [, drag] = useDrag({
+    const [, drag] = useDrag<BoardCardDragInterface, void, unknown>({
         type: DnDType.CARD,
-        item: () => dragItem,
-        collect: (monitor: any) => ({
-            isDragging: monitor.isDragging(),
-        }),
+        item: () => item,
     });
     const [, drop] = useDrop<BoardCardDragInterface, void, unknown>({
         accept: DnDType.CARD,
-        drop: (item) => {
-            dispatch(moveCardBetweenBoards({dragItem: item, dropItem: dragItem}))
+        drop: (dragItem) => {
+            dispatch(moveCardBetweenBoards({dragItem, dropItem: item}))
         }
     });
 
@@ -32,7 +29,7 @@ export const useDropBoard = (boardType: BoardTypeEnum) => {
     const [, ref] = useDrop<BoardCardDragInterface, void, never>({
         accept: DnDType.CARD,
         drop: (dragItem, monitor) => {
-            if (monitor.canDrop()) dispatch(dropCardToBoard({boardDestination: boardType, dragItem}))
+            monitor.canDrop() && dispatch(dropCardToBoard({boardDestination: boardType, dragItem}))
         },
     });
 

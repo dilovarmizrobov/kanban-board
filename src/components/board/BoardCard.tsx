@@ -10,8 +10,8 @@ interface BoardCardProps {
 }
 
 const BoardCard: React.FC<BoardCardProps> = ({card, boardType}) => {
-    const dragItem: BoardCardDragInterface = {id: card.id, boardType};
-    const ref = useDragAndDropBoardCard(dragItem);
+    const item: BoardCardDragInterface = {id: card.id, boardType};
+    const ref = useDragAndDropBoardCard(item);
     const isCompleted = boardType === BoardTypeEnum.COMPLETED;
 
     return (
